@@ -8,8 +8,12 @@ class BaseTariff extends AbstractTariff
     protected $costDistance = 10;
     protected $costTime = 3;
 
-    public function getRoundTime()
+    public function getPrice()
     {
-        return $this->getTime();
+        $result = parent::getPrice();
+        if ($this->serviceGps) {
+            $result += $this->getTotalCostGps();
+        }
+        return $result;
     }
 }

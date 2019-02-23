@@ -6,9 +6,10 @@ trait ServiceGps
 
     public function getTotalCostGps()
     {
-        if ($this->getTime() < 60) {
-            throw new Exception("Услуга доступна минимум 1 час");
-        }
-        return ceil($this->getTime() / 60) * $this->costGps;
+//        if ($this->time < 60) {
+//            throw new Exception("Услуга доступна минимум 1 час");
+//        }
+        $totalTime = (is_null($this->userTime)) ? $this->time : $this->userTime;
+        return ceil($totalTime / 60) * $this->costGps;
     }
 }

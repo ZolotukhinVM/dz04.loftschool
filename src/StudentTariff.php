@@ -8,16 +8,15 @@ class StudentTariff extends AbstractTariff
     protected $costDistance = 4;
     protected $costTime = 1;
 
-    public function getRoundTime()
-    {
-        return $this->getTime();
-    }
-
     public function getPrice()
     {
-        if ($this->getAge() > 25) {
-            return "Ошибка возраста";
+        if ($this->age > 25) {
+            return "Error: age > 25";
         }
-        return parent::getPrice();
+        $result = parent::getPrice();
+        if ($this->serviceGps) {
+            $result += $this->getTotalCostGps();
+        }
+        return $result;
     }
 }

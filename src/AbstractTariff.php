@@ -2,16 +2,22 @@
 
 abstract class AbstractTariff implements InterfacePriceCalculation
 {
+    const COEFFICIENT = 1;
+    const HIGHER_COEFFICIENT = 1.1;
     protected $costDistance;
     protected $costTime;
     protected $distance;
     protected $time;
+    protected $userTime;
     protected $age;
     protected $serviceDriver;
     protected $serviceGps;
 
-    public function __construct($distance, $time, $age, $serviceGps = false, $serviceDriver = false)
+    public function __construct($distance, $time, $age, $serviceGps, $serviceDriver)
     {
+//        if ($this->age < 18 || $this->age > 65) {
+//            throw new Exception("Недопустимый возраст");
+//        }
         $this->distance = $distance;
         $this->time = $time;
         $this->age = $age;
@@ -19,40 +25,13 @@ abstract class AbstractTariff implements InterfacePriceCalculation
         $this->serviceGps = $serviceGps;
     }
 
-    abstract public function getRoundTime();
-
-    protected function getAge()
+    public function getCoefficient()
     {
-        return $this->age;
-    }
-
-    protected function getTime()
-    {
-        return $this->time;
-    }
-
-
-    protected function getCoefficient($age)
-    {
-        if ($age < 18 || $age > 65) {
-            throw new Exception("Недопустимый возраст");
-        }
-        return ($age >= 18 && $age <= 21) ? 1.1 : 1;
+        return ($this->age >= 18 && $this->age <= 21) ? self::HIGHER_COEFFICIENT : self::COEFFICIENT;
     }
 
     public function getPrice()
     {
-        try {
-            $result = ($this->distance * $this->costDistance + $this->getRoundTime() * $this->costTime) * $this->getCoefficient($this->getAge());
-            if ($this->serviceDriver) {
-                $result += $this->costDriver;
-            }
-            if ($this->serviceGps) {
-                $result += $this->getTotalCostGps();
-            }
-            return $result;
-        } catch (Exception $e) {
-            echo "Ошибка: " . $e->getMessage();
-        }
+        return ($this->distance * $this->costDistance + $this->time * $this->costTime) * $this->getCoefficient();
     }
 }
