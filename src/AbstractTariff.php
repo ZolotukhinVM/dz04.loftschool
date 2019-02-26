@@ -6,8 +6,7 @@ abstract class AbstractTariff implements InterfacePriceCalculation
 {
     use ServiceDriver, ServiceGps;
 
-    const COEFFICIENT = 1;
-    const HIGHER_COEFFICIENT = 1.1;
+    protected $coefficient = 1;
     protected $costDistance;
     protected $costTime;
     protected $distance;
@@ -27,16 +26,14 @@ abstract class AbstractTariff implements InterfacePriceCalculation
         $this->age = $age;
         $this->serviceDriver = $serviceDriver;
         $this->serviceGps = $serviceGps;
-    }
-
-    public function getCoefficient()
-    {
-        return ($this->age >= 18 && $this->age <= 21) ? self::HIGHER_COEFFICIENT : self::COEFFICIENT;
+        if ($age >= 18 && $age <= 21) {
+            $this->coefficient = 1.1;
+        }
     }
 
     public function getPrice()
     {
-        $result = ($this->distance * $this->costDistance + $this->time * $this->costTime) * $this->getCoefficient();
+        $result = ($this->distance * $this->costDistance + $this->time * $this->costTime) * $this->coefficient;
         if ($this->serviceGps) {
             $result += $this->getTotalCostGps();
         }
