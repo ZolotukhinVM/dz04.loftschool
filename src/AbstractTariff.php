@@ -1,7 +1,11 @@
 <?php
 
+namespace ZolotukhinVM;
+
 abstract class AbstractTariff implements InterfacePriceCalculation
 {
+    use ServiceDriver, ServiceGps;
+
     const COEFFICIENT = 1;
     const HIGHER_COEFFICIENT = 1.1;
     protected $costDistance;
@@ -32,6 +36,13 @@ abstract class AbstractTariff implements InterfacePriceCalculation
 
     public function getPrice()
     {
-        return ($this->distance * $this->costDistance + $this->time * $this->costTime) * $this->getCoefficient();
+        $result = ($this->distance * $this->costDistance + $this->time * $this->costTime) * $this->getCoefficient();
+        if ($this->serviceGps) {
+            $result += $this->getTotalCostGps();
+        }
+        if ($this->serviceDriver) {
+            $result += $this->costDriver;
+        }
+        return $result;
     }
 }

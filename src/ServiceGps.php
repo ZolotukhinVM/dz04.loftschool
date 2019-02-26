@@ -1,5 +1,7 @@
 <?php
 
+namespace ZolotukhinVM;
+
 trait ServiceGps
 {
     protected $costGps = 15;

@@ -13,5 +13,8 @@
   "require": {
     "phpmd/phpmd": "@stable",
     "squizlabs/php_codesniffer": "@stable"
+  },
+  "autoload": {
+    "psr-4": {"ZolotukhinVM\\": "src/"}
   }
 }
